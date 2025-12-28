@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konversi Plain Teks ke Substitusi Angka</title>
+    <!-- Link Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Bagian konversi Plain Teks ke Cipher Teks -->
+            <div class="col-md-6">
+                <h3>Plain Teks</h3>
+                <textarea id="plainText" class="form-control" rows="10" placeholder="Masukkan teks di sini..."></textarea>
+            </div>
+            <div class="col-md-6">
+                <h3>Cipher Teks</h3>
+                <textarea id="cipherText" class="form-control" rows="10" readonly placeholder="Cipher teks akan muncul di sini..."></textarea>
+            </div>
+        </div>
+        <hr>
+        <!-- Bagian konversi Cipher Teks ke Plain Teks -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h3>Cipher Teks</h3>
+                <textarea id="cipherInput" class="form-control" rows="10" placeholder="Masukkan cipher teks di sini..."></textarea>
+            </div>
+            <div class="col-md-6">
+                <h3>Plain Teks</h3>
+                <textarea id="plainOutput" class="form-control" rows="10" readonly placeholder="Plain teks akan muncul di sini..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script jQuery -->
+    <script>
+        $(document).ready(function() {
+            // Fungsi untuk mengonversi plain text ke cipher text
+            function convertToCipher(plainText) {
+                const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                let cipher = [];
+
+                // Proses konversi setiap karakter
+                for (let char of plainText.toLowerCase()) {
+                    // Cek apakah karakter adalah huruf
+                    if (alphabet.includes(char)) {
+                        // Temukan posisi huruf dalam alfabet (1 = A, 2 = B, dst.)
+                        cipher.push(alphabet.indexOf(char) + 1);
+                    } else {
+                        // Jika bukan huruf, tambahkan karakter tanpa perubahan
+                        cipher.push(char);
+                    }
+                }
+
+                // Gabungkan cipher dengan pemisah '-'
+                return cipher.join('-');
+            }
+
+            // Fungsi untuk mengonversi cipher text kembali ke plain text
+            function convertToPlain(cipherText) {
+                const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                let plain = [];
+                let cipherArray = cipherText.split('-');
+
+                // Proses konversi setiap angka kembali ke huruf
+                for (let num of cipherArray) {
+                    // Cek apakah nilai adalah angka valid
+                    if (parseInt(num) >= 1 && parseInt(num) <= 26) {
+                        plain.push(alphabet[parseInt(num) - 1]);
+                    } else {
+                        // Jika bukan angka valid (misalnya tanda baca), tambahkan karakter
+                        plain.push(num);
+                    }
+                }
+
+                return plain.join('');
+            }
+
+            // Event listener untuk menangani perubahan di textarea plainText
+            $('#plainText').on('input', function() {
+                const plainText = $(this).val();
+                const cipherText = convertToCipher(plainText);
+                $('#cipherText').val(cipherText); // Update cipher text
+            });
+
+            // Event listener untuk menangani perubahan di textarea cipherInput
+            $('#cipherInput').on('input', function() {
+                const cipherText = $(this).val();
+                const plainText = convertToPlain(cipherText);
+                $('#plainOutput').val(plainText); // Update plain text
+            });
+        });
+    </script>
+
+    <!-- Link Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
